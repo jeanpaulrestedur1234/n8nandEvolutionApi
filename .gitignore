@@ -1,0 +1,56 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# dotenv environment variables
+.env
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Binaries
+*.exe
+*.dll
+*.so
+
+# MacOS
+.DS_Store
+
+# Editor folders
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+
+# Coverage reports
+coverage/
+
+# Build output
+dist/
+build/
+
+# Prisma migrations
+prisma/migrations/
+
+# Ignore local n8n files (if using n8n self-hosted)
+.n8n/
+
+# Docker volumes (optional)
+docker-data/
+
+# Others
+*.tgz
+*.zip

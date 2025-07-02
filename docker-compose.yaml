@@ -1,0 +1,101 @@
+services:
+  api:
+    container_name: evolution_api
+    image: evoapicloud/evolution-api:latest
+    restart: always
+    depends_on:
+      - redis
+      - postgres
+    ports:
+      - 8080:8080
+    volumes:
+      - evolution_instances:/evolution/instances
+    networks:
+      - evolution-net
+    env_file:
+      - .env
+    expose:
+      - 8080
+
+  redis:
+    image: redis:latest
+    networks:
+      - evolution-net
+    container_name: redis
+    env_file:
+     - .env
+    command: >
+      redis-server --port 6379 --appendonly yes
+    volumes:
+      - evolution_redis:/data
+    ports:
+      - 127.0.0.1:6379:6379
+    
+
+  postgres:
+    container_name: postgres
+    image: postgres:15
+    networks:
+      - evolution-net
+    command: ["postgres", "-c", "max_connections=1000", "-c", "listen_addresses=*"]
+    restart: always
+    ports:
+      - 127.0.0.1:5432:5432
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=evolution  # una base inicial obligatoria
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    env_file:
+     - .env
+    volumes:
+      - ./postgres-init/create_n8n.sql:/docker-entrypoint-initdb.d/01_create_n8n.sql
+      - ./postgres-init/n8n_schema.sql:/docker-entrypoint-initdb.d/02_n8n_schema.sql
+      - postgres_data:/var/lib/postgresql/data
+    expose:
+      - 5432
+
+  n8n:
+    image: n8nio/n8n
+    container_name: n8n
+    ports:
+      - 5678:5678
+    networks:
+      - evolution-net
+      
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
+      - N8N_HOST=n8n
+      - N8N_PORT=5678
+      - N8N_RUNNERS_ENABLED=true
+      - WEBHOOK_TUNNEL_URL=${WEBHOOK_SERVER}
+
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_USER=user
+      - DB_POSTGRESDB_PASSWORD=pass
+      
+
+      # redis
+      - QUEUE_BULL_REDIS_HOST=redis
+      - QUEUE_BULL_REDIS_PORT=6379
+    volumes:
+      - n8n_data:/home/node/.n8n
+    restart: always
+    depends_on:
+      - redis
+      - postgres
+volumes:
+  evolution_instances:
+  evolution_redis:
+  postgres_data:
+  n8n_data:
+
+networks:
+  evolution-net:
+    name: evolution-net
+    driver: bridge

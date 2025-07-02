@@ -1,0 +1,2446 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "2ccab0a0-6677-44be-8028-6019d4a91ec6",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1520,
+        460
+      ],
+      "id": "e80b3631-1fc8-4068-b876-dfaaf371f34c",
+      "name": "Webhook",
+      "webhookId": "2ccab0a0-6677-44be-8028-6019d4a91ec6"
+    },
+    {
+      "parameters": {
+        "jsCode": "const request_response = $input.first().json;\nconst category_id = $('Update Category').first().json.category_id;\n\nlet locations = [];\nlet message = '';\n\nif (category_id === 1) {\n  // mostrar locaciones de zero_or_one\n  locations = Object.keys(request_response.access_with_zero_or_one_scan_peripheral);\n  message = \"¿En qué locación presentas el problema?\\n\";\n} else if (category_id === 2) {\n  // mostrar locaciones de multiple\n  locations = Object.keys(request_response.access_with_multiple_scan_peripherals);\n  message = \"¿En qué locación presentas el problema?\\n\";\n} else if (category_id === 4) {\n  // cámaras\n  locations = Object.keys(request_response.cameras);\n  message = \"¿En qué cámara presentas el problema?\\n\";\n} else {\n  message = \"No hay opciones disponibles para esta categoría.\";\n  return [{ json: { message } }];\n}\n\n// construir enumeración con emojis numéricos\nlocations.forEach((loc, index) => {\n  const num = index + 1;\n  let numberEmoji = '';\n\n  if (num <= 9) {\n    numberEmoji = `${num}️⃣`; // 1️⃣ - 9️⃣\n  } else {\n    // convierte 10, 11, etc. a “1️⃣0️⃣”, “1️⃣1️⃣”, etc.\n    numberEmoji = num\n      .toString()\n      .split('')\n      .map(digit => `${digit}️⃣`)\n      .join('');\n  }\n\n  message += `${numberEmoji} ${loc}\\n`;\n});\n\n\nreturn [{ json: { message } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1960,
+        820
+      ],
+      "id": "e26f10d4-9f9d-44d5-abc1-9ae4e4eddb8f",
+      "name": "FilterCompanyInfo"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "={{ $('Select rows from Users').item.json.company }}-{{ $('Update Category').item.json.category_id }}",
+        "value": "={{ $json.access_with_zero_or_one_scan_peripheral }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        600
+      ],
+      "id": "8467ddae-d394-46a0-8e60-7b2fa052fbce",
+      "name": "Redis",
+      "credentials": {
+        "redis": {
+          "id": "MhXd4XzcR7PcrUrJ",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "chats",
+          "mode": "list",
+          "cachedResultName": "chats"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get Active chat').item.json.chat_id }}",
+            "location_name": "={{ $json.location }}",
+            "device": "={{ $json.device }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "category_id",
+              "displayName": "category_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "subcategory_id",
+              "displayName": "subcategory_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "location_name",
+              "displayName": "location_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "device",
+              "displayName": "device",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "closed_at",
+              "displayName": "closed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1820,
+        1040
+      ],
+      "id": "ddbed647-efda-4d0c-a2e1-9716074f90fa",
+      "name": "Update rows in a table1",
+      "credentials": {
+        "postgres": {
+          "id": "s2aFD2Q2HlKyOBnG",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "subcategories",
+          "mode": "list",
+          "cachedResultName": "subcategories"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "category_id",
+              "value": "={{ $json.category_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2060,
+        980
+      ],
+      "id": "10f1ed3f-dacf-4d59-8501-ca5766553093",
+      "name": "Select rows from a table2",
+      "credentials": {
+        "postgres": {
+          "id": "s2aFD2Q2HlKyOBnG",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// obtiene el array del input\nconst issues = $input.all().map(item => item.json);\n\n// construye el mensaje enumerado con ids autoincrementales\nlet message = \"*¿Qué problema se asocia a lo que estás pasando?*\\n\";\nmessage += \"Por favor elige una opción:\\n\\n\";\n\n// enumerar del 1 en adelante\nissues.forEach((issue, index) => {\n  const number = index + 1;\n  message += `${number}️⃣ *${issue.name}*\\n`;\n});\n\n// salida\nreturn [\n  {\n    json: {\n      whatsapp_message: message\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2300,
+        980
+      ],
+      "id": "a9dd744f-1ec7-4227-a30b-f77bb1be31ac",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://evolution_api:8080/message/sendText/{{ $('Webhook').all()[0].json.body.instance}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "apikey",
+              "value": "123456.+az1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').all()[0].json.body.data.key.remoteJid.split('@')[0]}}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.whatsapp_message }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2580,
+        980
+      ],
+      "id": "b13c28d4-9728-46e4-894b-a425a70ebb81",
+      "name": "HTTP Request4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://evolution_api:8080/message/sendText/{{ $('Webhook').all()[0].json.body.instance}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "apikey",
+              "value": "123456.+az1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').all()[0].json.body.data.key.remoteJid.split('@')[0]}}"
+            },
+            {
+              "name": "text",
+              "value": "=*Solución sugerida:* \n\n{{ $json.solution }}\n\n¿Esta solución fue útil?\n1️⃣ Sí\n2️⃣ No\n\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1740,
+        1160
+      ],
+      "id": "0b6889b1-419b-43c8-9863-8b4f04a62c77",
+      "name": "HTTP Request5"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH params AS (\n  SELECT \n    {{ $json.category_id }}::INTEGER AS category_id,\n    '{{ $('Evaluate existing or new chat').item.json.body.data.message.conversation }}'::INTEGER AS row_number,\n    {{ $json.chat_id }}::INTEGER AS chat_id\n),\nselected_subcategory AS (\n  SELECT *\n  FROM subcategories\n  WHERE category_id = (SELECT category_id FROM params)\n  ORDER BY id\n  LIMIT 1\n  OFFSET (SELECT row_number - 1 FROM params)\n),\nupdated_chat AS (\n  UPDATE chats\n  SET subcategory_id = (SELECT id FROM selected_subcategory)\n  WHERE id = (SELECT chat_id FROM params)\n  RETURNING *\n)\nSELECT\n  sc.id AS subcategory_id,\n  sc.name AS subcategory_name,\n  sc.solution,\n  uc.id AS chat_id,\n  uc.category_id,\n  uc.subcategory_id\nFROM selected_subcategory sc\nJOIN updated_chat uc ON uc.subcategory_id = sc.id;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1020,
+        1180
+      ],
+      "id": "9f12c3cb-6250-41f1-898b-fb0e1213bf2e",
+      "name": "Execute a SQL query2",
+      "credentials": {
+        "postgres": {
+          "id": "s2aFD2Q2HlKyOBnG",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const usseles = $('Evaluate existing or new chat').first().json.body.data.message.conversation;\nlet whatsapp_message;\nlet end_process;\nlet usseles_solution;\nif (usseles == 1) {\n  whatsapp_message = \"✅ Gracias por confiar en nuestro sistema, espero haber ayudado.\";\n  usseles_solution=true;\n  \n   end_process= true;\n} else if (usseles == 2) {\n  whatsapp_message = \"📨 Vamos a escalar tu caso a un asesor para brindarte una atención más detallada. Por favor, cuéntanos exactamente lo que ocurrió con todos los detalles posibles, y enviaremos la información al equipo correspondiente.\";\n  usseles_solution=false;\n  end_process= true;\n} else {\n  whatsapp_message = \"⚠️ La opción ingresada no es válida, por favor intente de nuevo.\";\n  end_process= false;\n  usseles_solution= false;\n}\n\nreturn [\n  {\n    json: {\n      end_process,\n      \n      whatsapp_message,\n      usseles_solution\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1060,
+        1440
+      ],
+      "id": "df3d04fc-bb34-4738-95d1-9f83841eaf07",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://evolution_api:8080/message/sendText/{{ $('Webhook').all()[0].json.body.instance}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "apikey",
+              "value": "123456.+az1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').all()[0].json.body.data.key.remoteJid.split('@')[0]}}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.whatsapp_message }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1680,
+        1460
+      ],
+      "id": "2339715a-318f-406b-b320-4d9366fde242",
+      "name": "HTTP Request6"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE chats\nSET\n  solution_feedback = {{ $json.usseles_solution }}\n  {{ $json.usseles_solution ? \", status = 'closed', closed_at = NOW()\" : \"\" }}\nWHERE id = {{ $('Get Active chat').item.json.chat_id }};\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1820,
+        1640
+      ],
+      "id": "d1630eb7-bd41-417a-af72-134332e6c339",
+      "name": "Execute a SQL query3",
+      "credentials": {
+        "postgres": {
+          "id": "s2aFD2Q2HlKyOBnG",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "chats",
+          "mode": "list",
+          "cachedResultName": "chats"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.chat_id }}",
+            "summary": "={{ $('Evaluate existing or new chat').item.json.body.data.message.conversation }}",
+            "status": "closed",
+            "closed_at": "2025-07-01T14:31:29"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "category_id",
+              "displayName": "category_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "subcategory_id",
+              "displayName": "subcategory_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "location_name",
+              "displayName": "location_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "device",
+              "displayName": "device",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "solution_feedback",
+              "displayName": "solution_feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "closed_at",
+              "displayName": "closed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        840,
+        1600
+      ],
+      "id": "6dcb6187-dd0e-4a54-8225-e45ce8dd2193",
+      "name": "Update rows in a table2",
+      "credentials": {
+        "postgres": {
+          "id": "s2aFD2Q2HlKyOBnG",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://evolution_api:8080/message/sendText/{{ $('Webhook').all()[0].json.body.instance}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "apikey",
+              "value": "123456.+az1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').all()[0].json.body.data.key.remoteJid.split('@')[0]}}"
+            },
+            {
+              "name": "text",
+              "value": "=✅ Gracias. Próximamente un asesor se pondrá en contacto contigo."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1160,
+        1600
+      ],
+      "id": "70ad3c35-6338-45f3-960b-97f3276a444c",
+      "name": "HTTP Request7"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "chats",
+          "mode": "list",
+          "cachedResultName": "chats"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.id }}",
+            "location_name": "Fuse",
+            "device": "App"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "category_id",
+              "displayName": "category_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "subcategory_id",
+              "displayName": "subcategory_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "location_name",
+              "displayName": "location_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "device",
+              "displayName": "device",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "solution_feedback",
+              "displayName": "solution_feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "closed_at",
+              "displayName": "closed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1160,
+        440
+      ],
+      "id": "762fb4ca-4544-4038-b1b3-ee0072815151",
+      "name": "Update rows in a table3",
+      "credentials": {
+        "postgres": {
+          "id": "s2aFD2Q2HlKyOBnG",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH params AS (\n  SELECT \n    {{ $json.id }}::INTEGER AS chat_id,\n    {{ $json.category_id }}::INTEGER AS category_id\n),\nfirst_subcategory AS (\n  SELECT id\n  FROM subcategories\n  WHERE category_id = (SELECT category_id FROM params)\n  ORDER BY id\n  LIMIT 1\n),\nupdated_chat AS (\n  UPDATE chats\n  SET\n    category_id = (SELECT category_id FROM params),\n    subcategory_id = (SELECT id FROM first_subcategory),\n    device = 'other',\n    location_name = 'other',\n    solution_feedback = FALSE\n  WHERE id = (SELECT chat_id FROM params)\n  RETURNING *\n)\nSELECT * FROM updated_chat;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1440,
+        300
+      ],
+      "id": "733b5997-c430-4042-ab52-b6682124a4c6",
+      "name": "Execute a SQL query4",
+      "credentials": {
+        "postgres": {
+          "id": "s2aFD2Q2HlKyOBnG",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://evolution_api:8080/message/sendText/{{ $('Webhook').all()[0].json.body.instance}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "apikey",
+              "value": "123456.+az1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').all()[0].json.body.data.key.remoteJid.split('@')[0]}}"
+            },
+            {
+              "name": "text",
+              "value": "=📨 Vamos a escalar tu caso a un asesor para brindarte una atención más detallada. Por favor, cuéntanos exactamente lo que ocurrió con todos los detalles posibles, y enviaremos la información al equipo correspondiente."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1800,
+        340
+      ],
+      "id": "dd081b7a-46fc-4035-9723-cb75b07709ec",
+      "name": "HTTP Request8"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b6962d89-2bb8-47fb-89bc-2b35a4c50b08",
+              "leftValue": "={{ $json.solution }}",
+              "rightValue": "Contactar soporte técnico.",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1280,
+        1180
+      ],
+      "id": "5fa3de46-df3f-42a0-9e33-5aa16e6d6aa3",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://evolution_api:8080/message/sendText/{{ $('Webhook').all()[0].json.body.instance}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "apikey",
+              "value": "123456.+az1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').all()[0].json.body.data.key.remoteJid.split('@')[0]}}"
+            },
+            {
+              "name": "text",
+              "value": "=📨 Vamos a escalar tu caso a un asesor para brindarte una atención más detallada. Por favor, cuéntanos exactamente lo que ocurrió con todos los detalles posibles, y enviaremos la información al equipo correspondiente."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2040,
+        1280
+      ],
+      "id": "1f89e381-c1c6-42ad-8d78-80804a93047d",
+      "name": "HTTP Request9"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "54248210-ee09-4d45-9241-ea36165bfcb1",
+              "leftValue": "={{ $json.end_process }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1360,
+        1520
+      ],
+      "id": "b24c13bb-e1c7-448a-9ba1-cc3177a73a31",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "chats",
+          "mode": "list",
+          "cachedResultName": "chats"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "solution_feedback": false,
+            "id": "={{ $json.chat_id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "category_id",
+              "displayName": "category_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "subcategory_id",
+              "displayName": "subcategory_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "location_name",
+              "displayName": "location_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "device",
+              "displayName": "device",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "solution_feedback",
+              "displayName": "solution_feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "closed_at",
+              "displayName": "closed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1520,
+        1280
+      ],
+      "id": "ce0f84b0-55b1-4e0f-9f9f-925715fbc9fc",
+      "name": "Update rows in a table4",
+      "credentials": {
+        "postgres": {
+          "id": "s2aFD2Q2HlKyOBnG",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "7dd4d37a-268b-47f3-805a-1a51e7ca1c7e",
+                    "leftValue": "={{ $json.body.data.message.conversation }}",
+                    "rightValue": "Tengo un problema",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Start conversation"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "89331ca6-de01-4da3-a9e2-285d6f5cd0fc",
+                    "leftValue": "={{ $json.body.data.message.conversation }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Evaluate Conversation Active"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1020,
+        480
+      ],
+      "id": "edd13a15-8b9b-4932-8597-53d9a9f1f9d4",
+      "name": "Evaluate existing or new chat"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "categories",
+          "mode": "list",
+          "cachedResultName": "categories"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -300,
+        140
+      ],
+      "id": "9ed1775c-fb2a-4451-8c3a-1654ea588f04",
+      "name": "Get categories for message",
+      "credentials": {
+        "postgres": {
+          "id": "s2aFD2Q2HlKyOBnG",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH incoming_data AS (\n  SELECT \n    '{{ $json.body.data.key.remoteJid.replace(\"@s.whatsapp.net\", \"\") }}'::TEXT AS phone,\n    '{{ $json.body.data.pushName ? $json.body.data.pushName : \"WhatsApp User\" }}'::TEXT AS name,\n    '{{  $json.body.data.message.conversation.split(':')[1].trim()|| null }}'::TEXT AS company -- opcional si viene del JSON\n),\n\nfound_user AS (\n  SELECT id FROM users WHERE phone = (SELECT phone FROM incoming_data)\n),\n\ninserted_user AS (\n  INSERT INTO users (phone, name, company)\n  SELECT phone, name, company\n  FROM incoming_data\n  WHERE NOT EXISTS (SELECT 1 FROM found_user)\n  RETURNING id\n),\n\nfinal_user AS (\n  SELECT id FROM found_user\n  UNION ALL\n  SELECT id FROM inserted_user\n),\n\nupdated_chats AS (\n  UPDATE chats\n  SET status = 'closed',\n      closed_at = CURRENT_TIMESTAMP\n  WHERE user_id = (SELECT id FROM final_user)\n    AND status = 'open'\n  RETURNING *\n)\n\n-- Nuevo chat con categoría y subcategoría opcionalmente en null\nINSERT INTO chats (user_id, category_id, subcategory_id)\nSELECT \n  id,\n  NULL,      -- ← puedes reemplazar por un número si sabes la categoría (ej: 1)\n  NULL      -- ← lo mismo para subcategoría\nFROM final_user;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        300
+      ],
+      "id": "a4c3b123-7a67-4b03-8507-abaecc36da90",
+      "name": "Start new chat",
+      "alwaysOutputData": false,
+      "credentials": {
+        "postgres": {
+          "id": "s2aFD2Q2HlKyOBnG",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nlet message = \"¿Qué problema presenta?\\n\";\n\nitems.forEach(item => {\n  const num = item.json.id;\n  const emojiNum = num <= 10 ? `${num}️⃣` : `${num}.`; // hasta 10 usa emoji, más de 10 con punto\n  message += `${emojiNum} ${item.json.description}\\n`;\n});\n\nreturn [{ json: { message } }];\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -60,
+        120
+      ],
+      "id": "5e459401-5c93-41af-84ac-af66a04a7e56",
+      "name": "Set defacult message"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://evolution_api:8080/message/sendText/{{ $('Webhook').all()[0].json.body.instance}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "apikey",
+              "value": "123456.+az1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').all()[0].json.body.data.key.remoteJid.split('@')[0]}}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $('Set defacult message').item.json.message}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        120
+      ],
+      "id": "742450e6-4cfa-45cd-8537-531e5c2b6c8f",
+      "name": "Send Message"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH incoming_data AS (\n  SELECT \n    '{{ $json.body.data.key.remoteJid.split(\"@\")[0] }}'::TEXT AS phone\n),\nfound_user AS (\n  SELECT id, company FROM users WHERE phone = (SELECT phone FROM incoming_data)\n),\nopen_chat AS (\n  SELECT *\n  FROM chats\n  WHERE user_id = (SELECT id FROM found_user)\n    AND status = 'open'\n  LIMIT 1\n)\nSELECT\n  oc.id AS chat_id,\n  oc.status,\n  oc.category_id,\n  oc.subcategory_id,\n  oc.location_name,\n  oc.device,\n  oc.summary,\n  oc.created_at,\n  oc.closed_at,\n  oc.solution_feedback,\n  fu.company\nFROM open_chat oc\nJOIN found_user fu ON fu.id = oc.user_id;\n\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -380,
+        640
+      ],
+      "id": "3c958c67-df05-4af6-aca0-d621e07fa313",
+      "name": "Get Active chat",
+      "credentials": {
+        "postgres": {
+          "id": "s2aFD2Q2HlKyOBnG",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8b4306a8-3ccd-4b1f-9581-ea699c0defe0",
+              "leftValue": "={{ $json.chat_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -160,
+        820
+      ],
+      "id": "6fae9f43-58ed-4f7f-a45a-88a95b364589",
+      "name": "Evaluate if chat Exist"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "number",
+                      "operation": "notExists",
+                      "singleValue": true
+                    },
+                    "id": "388f3ca8-e3a1-45a1-906f-4553d67822fd"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Dont have category"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f373ca8b-4aa2-4e0e-a303-38eb64a6ce22",
+                    "leftValue": "={{ $json.category_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "number",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Has category"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        60,
+        720
+      ],
+      "id": "292948e2-d83f-4a5c-9b8f-eaf2f9eee577",
+      "name": "Evaluate credentials"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "chats",
+          "mode": "list",
+          "cachedResultName": "chats"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.chat_id }}",
+            "category_id": "={{ $('Webhook').item.json.body.data.message.conversation }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "category_id",
+              "displayName": "category_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "subcategory_id",
+              "displayName": "subcategory_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "location_name",
+              "displayName": "location_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "device",
+              "displayName": "device",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "closed_at",
+              "displayName": "closed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        320,
+        560
+      ],
+      "id": "582f0db5-e2c0-4a90-a650-fc7b380a82ec",
+      "name": "Update Category",
+      "alwaysOutputData": false,
+      "credentials": {
+        "postgres": {
+          "id": "s2aFD2Q2HlKyOBnG",
+          "name": "Postgres account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category_id }}",
+                    "rightValue": 3,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "df3e8af7-ea7c-40f6-a3c5-0cf135607143"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "App problems"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1209f295-18c5-40a8-bd61-ec30857b3b1a",
+                    "leftValue": "={{ $json.category_id }}",
+                    "rightValue": 5,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Other"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d25e8246-c1f9-4ce5-97ed-264277a923b3",
+                    "leftValue": "={{ $json.category_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "number",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Updated"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "529a9499-9089-4f8c-89f5-f92ec5eb22cf",
+                    "leftValue": "={{ $json.category_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "number",
+                      "operation": "notExists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Not updated"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        580,
+        500
+      ],
+      "id": "b4f8fd47-bebf-41dd-bb6b-36440e09f6df",
+      "name": "Get category flow"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.location_name }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notExists",
+                      "singleValue": true
+                    },
+                    "id": "0cebf014-cc45-4468-8086-30f798a47555"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "dont have location"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ac505b3c-bfef-41e0-8323-caff75457ef9",
+                    "leftValue": "={{ $json.subcategory_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "number",
+                      "operation": "notExists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Dont have subcategory"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e4b7f63a-f6e5-4380-b529-a3fa8e2ded61",
+                    "leftValue": "={{ $json.solution_feedback }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "notExists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "dont have feetback"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "7b705705-5aea-4940-a327-ac317fcfedbe",
+                    "leftValue": "={{ $json.solution_feedback }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "false",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Summary info"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        360,
+        880
+      ],
+      "id": "40c74d3c-d5c4-49d4-b2af-d0bb0a063a29",
+      "name": "Evaluate chat content"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://evolution_api:8080/message/sendText/{{ $('Webhook').all()[0].json.body.instance}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "apikey",
+              "value": "123456.+az1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').all()[0].json.body.data.key.remoteJid.split('@')[0]}}"
+            },
+            {
+              "name": "text",
+              "value": "=Respuesta invalida  Vuleva a intentar"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        840,
+        720
+      ],
+      "id": "cdc2ff7f-2882-43a9-a5ae-a462f02ce61a",
+      "name": "Send Message Error"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "users",
+          "mode": "list",
+          "cachedResultName": "users"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "id",
+              "value": "={{ $json.user_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1080,
+        620
+      ],
+      "id": "3fb29b97-1705-4708-aca9-274fc31e7037",
+      "name": "Select rows from Users",
+      "credentials": {
+        "postgres": {
+          "id": "s2aFD2Q2HlKyOBnG",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://staging.fusepong.com/api/app/company/group_device_names_by_location?company_name={{ $json.company }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1260,
+        700
+      ],
+      "id": "0ec773d0-aab1-4632-9257-f483fb365a7e",
+      "name": "Get comapny information",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "key": "={{ $json.company }}-{{ $json.category_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        980
+      ],
+      "id": "45dd87eb-b2e2-468a-9738-d0e3449518c4",
+      "name": "Get company info",
+      "credentials": {
+        "redis": {
+          "id": "MhXd4XzcR7PcrUrJ",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Entradas\nconst selectedRaw = $('Webhook').first().json.body.data.message.conversation;\nconst location = $('Get Active chat').first().json.location_name;\nlet device = $('Get Active chat').first().json.device;\n\nconst company_info = $input.first().json.propertyName;\n\n// Validar que selected sea numérico\nconst selected = parseInt(selectedRaw) -1;\nif (isNaN(selected)) {\n  return [{ json: { error: \"La opción ingresada no es un número válido.\" } }];\n}\n\n// Si la location está vacía, continuar\nif (!location || location.trim() === '') {\n  // obtener listado de locaciones\n  const locations = Object.keys(company_info);\n\n  // validar índice dentro del rango\n  if (selected < 0 || selected >= locations.length) {\n    return [{ json: { error: \"Índice fuera de rango.\" } }];\n  }\n\n  // obtener la locación según índice\n  const selectedLocation = locations[selected];\n  \n  // obtener dispositivos de esa locación\n  const devicesStr = company_info[selectedLocation];\n  const devices = devicesStr.split(',');\n\n  // si solo hay un dispositivo, asignarlo\n  device = devices[0];\n\n  return [{\n    json: {\n      location: selectedLocation,\n      device: device\n    }\n  }];\n} else {\n  // si location ya viene lleno, no hacer nada\n  return [{\n    json: {\n      location: location,\n      device: device\n    }\n  }];\n}\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1260,
+        980
+      ],
+      "id": "cf87145c-a159-40a4-b331-3f8826b032a5",
+      "name": "Set message"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://evolution_api:8080/message/sendText/{{ $('Webhook').all()[0].json.body.instance}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "apikey",
+              "value": "123456.+az1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').all()[0].json.body.data.key.remoteJid.split('@')[0]}}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.message }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2260,
+        820
+      ],
+      "id": "3aef10db-07ee-49ca-babf-8aab5922e737",
+      "name": "Send Flow message"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "287fcf83-d817-439c-a504-867685c375d3",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        460
+      ],
+      "id": "f998e512-da73-4e81-93b6-a62a4dc88b93",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9af3c18a-548b-4c03-a8ba-7ba187991a53",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1440,
+        840
+      ],
+      "id": "006b91d3-ef8d-4c31-899c-5af974425e14",
+      "name": "If Http error"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"location\": \"desconcoida\",\n  \"device\": \"desconocido\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1640,
+        920
+      ],
+      "id": "28b2e2b5-df6c-418a-b96a-81b69dc40e91",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Evaluate existing or new chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FilterCompanyInfo": {
+      "main": [
+        [
+          {
+            "node": "Send Flow message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update rows in a table1": {
+      "main": [
+        [
+          {
+            "node": "Select rows from a table2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select rows from a table2": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query2": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update rows in a table2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update rows in a table3": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query4": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update rows in a table4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update rows in a table4": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate existing or new chat": {
+      "main": [
+        [
+          {
+            "node": "Get categories for message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Start new chat",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Active chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get categories for message": {
+      "main": [
+        [
+          {
+            "node": "Set defacult message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set defacult message": {
+      "main": [
+        [
+          {
+            "node": "Send Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Active chat": {
+      "main": [
+        [
+          {
+            "node": "Evaluate if chat Exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate if chat Exist": {
+      "main": [
+        [
+          {
+            "node": "Evaluate credentials",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate credentials": {
+      "main": [
+        [
+          {
+            "node": "Update Category",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Evaluate chat content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Category": {
+      "main": [
+        [
+          {
+            "node": "Get category flow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get category flow": {
+      "main": [
+        [
+          {
+            "node": "Update rows in a table3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute a SQL query4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Select rows from Users",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Message Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate chat content": {
+      "main": [
+        [
+          {
+            "node": "Get company info",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute a SQL query2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update rows in a table2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select rows from Users": {
+      "main": [
+        [
+          {
+            "node": "Get comapny information",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get comapny information": {
+      "main": [
+        [
+          {
+            "node": "Redis",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If Http error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get company info": {
+      "main": [
+        [
+          {
+            "node": "Set message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set message": {
+      "main": [
+        [
+          {
+            "node": "Update rows in a table1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Select rows from a table2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Http error": {
+      "main": [
+        [
+          {
+            "node": "FilterCompanyInfo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Update rows in a table1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8e099d76-b3dd-4ad9-b89e-7c91e92107ae",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bef5690b260242b347db82029ddc76e57c73720b0de85793f631cb9ea74a5969"
+  },
+  "id": "eBSwfezUgh9b8NpK",
+  "tags": []
+}
