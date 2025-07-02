@@ -10,10 +10,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -1520,
-        460
+        -1460,
+        340
       ],
-      "id": "e80b3631-1fc8-4068-b876-dfaaf371f34c",
+      "id": "97a42b91-a899-4c35-a4b5-d0b5fb01a651",
       "name": "Webhook",
       "webhookId": "2ccab0a0-6677-44be-8028-6019d4a91ec6"
     },
@@ -24,10 +24,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1960,
-        820
+        2020,
+        700
       ],
-      "id": "e26f10d4-9f9d-44d5-abc1-9ae4e4eddb8f",
+      "id": "6967af92-e6e8-40f0-af97-77c5096da720",
       "name": "FilterCompanyInfo"
     },
     {
@@ -39,14 +39,14 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        1480,
-        600
+        1540,
+        480
       ],
-      "id": "8467ddae-d394-46a0-8e60-7b2fa052fbce",
+      "id": "a307720b-0e48-4b4e-964f-5569be0b4826",
       "name": "Redis",
       "credentials": {
         "redis": {
-          "id": "MhXd4XzcR7PcrUrJ",
+          "id": "xehRnTWPh4hf1OXU",
           "name": "Redis account"
         }
       }
@@ -183,14 +183,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1820,
-        1040
+        1880,
+        920
       ],
-      "id": "ddbed647-efda-4d0c-a2e1-9716074f90fa",
+      "id": "84c0a414-6b7e-4581-a590-810674b5b899",
       "name": "Update rows in a table1",
       "credentials": {
         "postgres": {
-          "id": "s2aFD2Q2HlKyOBnG",
+          "id": "sDAx3C8YiPv8uVPi",
           "name": "Postgres account"
         }
       }
@@ -223,14 +223,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        2060,
-        980
+        2120,
+        860
       ],
-      "id": "10f1ed3f-dacf-4d59-8501-ca5766553093",
+      "id": "9c36f590-193a-4479-ab05-be740abe2659",
       "name": "Select rows from a table2",
       "credentials": {
         "postgres": {
-          "id": "s2aFD2Q2HlKyOBnG",
+          "id": "sDAx3C8YiPv8uVPi",
           "name": "Postgres account"
         }
       }
@@ -242,10 +242,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2300,
-        980
+        2360,
+        860
       ],
-      "id": "a9dd744f-1ec7-4227-a30b-f77bb1be31ac",
+      "id": "725a29e6-45c3-4b57-bc64-8e75ad6a4ff8",
       "name": "Code2"
     },
     {
@@ -283,10 +283,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2580,
-        980
+        2640,
+        860
       ],
-      "id": "b13c28d4-9728-46e4-894b-a425a70ebb81",
+      "id": "5dc6ff80-2a5e-46e5-8cd1-481ea88a0840",
       "name": "HTTP Request4"
     },
     {
@@ -324,10 +324,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1740,
-        1160
+        1800,
+        1040
       ],
-      "id": "0b6889b1-419b-43c8-9863-8b4f04a62c77",
+      "id": "fc95afcb-1ed3-416f-9bd6-ebfcf42a8711",
       "name": "HTTP Request5"
     },
     {
@@ -339,14 +339,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1020,
-        1180
+        1080,
+        1060
       ],
-      "id": "9f12c3cb-6250-41f1-898b-fb0e1213bf2e",
+      "id": "99aa6fb3-c7be-48e0-8c4d-151434dfb633",
       "name": "Execute a SQL query2",
       "credentials": {
         "postgres": {
-          "id": "s2aFD2Q2HlKyOBnG",
+          "id": "sDAx3C8YiPv8uVPi",
           "name": "Postgres account"
         }
       }
@@ -358,10 +358,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1060,
-        1440
+        1120,
+        1320
       ],
-      "id": "df3d04fc-bb34-4738-95d1-9f83841eaf07",
+      "id": "57051550-e713-4ac9-9be0-af2311def567",
       "name": "Code3"
     },
     {
@@ -399,10 +399,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1680,
-        1460
+        1740,
+        1340
       ],
-      "id": "2339715a-318f-406b-b320-4d9366fde242",
+      "id": "2185d5c7-2629-4e67-94a3-e9434edaaa0b",
       "name": "HTTP Request6"
     },
     {
@@ -414,14 +414,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1820,
-        1640
+        1880,
+        1520
       ],
-      "id": "d1630eb7-bd41-417a-af72-134332e6c339",
+      "id": "6ec42d52-3f35-4e6a-9d9b-1b93b12eda8f",
       "name": "Execute a SQL query3",
       "credentials": {
         "postgres": {
-          "id": "s2aFD2Q2HlKyOBnG",
+          "id": "sDAx3C8YiPv8uVPi",
           "name": "Postgres account"
         }
       }
@@ -568,14 +568,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        840,
-        1600
+        900,
+        1480
       ],
-      "id": "6dcb6187-dd0e-4a54-8225-e45ce8dd2193",
+      "id": "62b4b513-7436-499b-ad3c-fb4bab17b7b3",
       "name": "Update rows in a table2",
       "credentials": {
         "postgres": {
-          "id": "s2aFD2Q2HlKyOBnG",
+          "id": "sDAx3C8YiPv8uVPi",
           "name": "Postgres account"
         }
       }
@@ -615,10 +615,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1160,
-        1600
+        1220,
+        1480
       ],
-      "id": "70ad3c35-6338-45f3-960b-97f3276a444c",
+      "id": "874a4d53-362f-47ad-9e6f-258f96f5fc35",
       "name": "HTTP Request7"
     },
     {
@@ -762,14 +762,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1160,
-        440
+        1220,
+        320
       ],
-      "id": "762fb4ca-4544-4038-b1b3-ee0072815151",
+      "id": "c2dc41c5-825d-4766-bcf5-f324a556bf96",
       "name": "Update rows in a table3",
       "credentials": {
         "postgres": {
-          "id": "s2aFD2Q2HlKyOBnG",
+          "id": "sDAx3C8YiPv8uVPi",
           "name": "Postgres account"
         }
       }
@@ -783,14 +783,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1440,
-        300
+        1500,
+        180
       ],
-      "id": "733b5997-c430-4042-ab52-b6682124a4c6",
+      "id": "339a620e-c66e-4c16-9a7c-1e8320c34346",
       "name": "Execute a SQL query4",
       "credentials": {
         "postgres": {
-          "id": "s2aFD2Q2HlKyOBnG",
+          "id": "sDAx3C8YiPv8uVPi",
           "name": "Postgres account"
         }
       }
@@ -830,10 +830,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1800,
-        340
+        1860,
+        220
       ],
-      "id": "dd081b7a-46fc-4035-9723-cb75b07709ec",
+      "id": "4991f959-ca48-4fe3-a3ae-8af7c9810808",
       "name": "HTTP Request8"
     },
     {
@@ -863,10 +863,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1280,
-        1180
+        1340,
+        1060
       ],
-      "id": "5fa3de46-df3f-42a0-9e33-5aa16e6d6aa3",
+      "id": "b83580d5-753e-4aa2-9795-d8483005d141",
       "name": "If"
     },
     {
@@ -904,10 +904,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2040,
-        1280
+        2100,
+        1160
       ],
-      "id": "1f89e381-c1c6-42ad-8d78-80804a93047d",
+      "id": "3681d982-8014-4ddd-8d02-0ca999483ae4",
       "name": "HTTP Request9"
     },
     {
@@ -938,10 +938,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1360,
-        1520
+        1420,
+        1400
       ],
-      "id": "b24c13bb-e1c7-448a-9ba1-cc3177a73a31",
+      "id": "f212b7d0-a2c2-48f9-bf20-07bedd5bc2e3",
       "name": "If2"
     },
     {
@@ -1085,14 +1085,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1520,
-        1280
+        1580,
+        1160
       ],
-      "id": "ce0f84b0-55b1-4e0f-9f9f-925715fbc9fc",
+      "id": "391a0d1f-67e9-44db-8f7c-935b567efc72",
       "name": "Update rows in a table4",
       "credentials": {
         "postgres": {
-          "id": "s2aFD2Q2HlKyOBnG",
+          "id": "sDAx3C8YiPv8uVPi",
           "name": "Postgres account"
         }
       }
@@ -1157,10 +1157,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -1020,
-        480
+        -960,
+        360
       ],
-      "id": "edd13a15-8b9b-4932-8597-53d9a9f1f9d4",
+      "id": "0d8adb7a-1c8e-4b38-92a6-a4cbe960d9d7",
       "name": "Evaluate existing or new chat"
     },
     {
@@ -1183,14 +1183,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -300,
-        140
+        -240,
+        20
       ],
-      "id": "9ed1775c-fb2a-4451-8c3a-1654ea588f04",
+      "id": "c5efb7e2-b3c5-42e2-b601-9fe696ab1419",
       "name": "Get categories for message",
       "credentials": {
         "postgres": {
-          "id": "s2aFD2Q2HlKyOBnG",
+          "id": "sDAx3C8YiPv8uVPi",
           "name": "Postgres account"
         }
       }
@@ -1204,15 +1204,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        0,
-        300
+        60,
+        180
       ],
-      "id": "a4c3b123-7a67-4b03-8507-abaecc36da90",
+      "id": "12b4e0ef-f663-4bf3-af4d-77d60eb25bd8",
       "name": "Start new chat",
       "alwaysOutputData": false,
       "credentials": {
         "postgres": {
-          "id": "s2aFD2Q2HlKyOBnG",
+          "id": "sDAx3C8YiPv8uVPi",
           "name": "Postgres account"
         }
       }
@@ -1224,10 +1224,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -60,
-        120
+        0,
+        0
       ],
-      "id": "5e459401-5c93-41af-84ac-af66a04a7e56",
+      "id": "090affe4-dc3c-4e2f-9ed9-15f2a509e20e",
       "name": "Set defacult message"
     },
     {
@@ -1265,10 +1265,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        260,
-        120
+        320,
+        0
       ],
-      "id": "742450e6-4cfa-45cd-8537-531e5c2b6c8f",
+      "id": "6025ad2d-511e-44e8-8977-f3e546298f05",
       "name": "Send Message"
     },
     {
@@ -1280,14 +1280,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -380,
-        640
+        -320,
+        520
       ],
-      "id": "3c958c67-df05-4af6-aca0-d621e07fa313",
+      "id": "fddd3419-8071-48e5-9e4a-93196d966cdf",
       "name": "Get Active chat",
       "credentials": {
         "postgres": {
-          "id": "s2aFD2Q2HlKyOBnG",
+          "id": "sDAx3C8YiPv8uVPi",
           "name": "Postgres account"
         }
       }
@@ -1320,10 +1320,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -160,
-        820
+        -100,
+        700
       ],
-      "id": "6fae9f43-58ed-4f7f-a45a-88a95b364589",
+      "id": "3c914e69-3945-44ed-b159-531bea59b506",
       "name": "Evaluate if chat Exist"
     },
     {
@@ -1387,10 +1387,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        60,
-        720
+        120,
+        600
       ],
-      "id": "292948e2-d83f-4a5c-9b8f-eaf2f9eee577",
+      "id": "2db597b1-a2e6-46f1-acf2-0b477f33020c",
       "name": "Evaluate credentials"
     },
     {
@@ -1524,15 +1524,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        320,
-        560
+        380,
+        440
       ],
-      "id": "582f0db5-e2c0-4a90-a650-fc7b380a82ec",
+      "id": "ea6181b9-0aba-44d4-bd7b-99f187085d8d",
       "name": "Update Category",
       "alwaysOutputData": false,
       "credentials": {
         "postgres": {
-          "id": "s2aFD2Q2HlKyOBnG",
+          "id": "sDAx3C8YiPv8uVPi",
           "name": "Postgres account"
         }
       },
@@ -1647,10 +1647,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        580,
-        500
+        640,
+        380
       ],
-      "id": "b4f8fd47-bebf-41dd-bb6b-36440e09f6df",
+      "id": "47ffe546-3f9d-4d95-9a0b-6f0576304516",
       "name": "Get category flow"
     },
     {
@@ -1764,10 +1764,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        360,
-        880
+        420,
+        760
       ],
-      "id": "40c74d3c-d5c4-49d4-b2af-d0bb0a063a29",
+      "id": "6868bf1f-cd55-4839-b84e-3e06718ae4b8",
       "name": "Evaluate chat content"
     },
     {
@@ -1805,10 +1805,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        840,
-        720
+        900,
+        600
       ],
-      "id": "cdc2ff7f-2882-43a9-a5ae-a462f02ce61a",
+      "id": "3fc2cb15-e483-4650-96dc-a1705e991c05",
       "name": "Send Message Error"
     },
     {
@@ -1839,30 +1839,30 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1080,
-        620
+        1140,
+        500
       ],
-      "id": "3fb29b97-1705-4708-aca9-274fc31e7037",
+      "id": "ef418d0a-a215-4b5f-ad2a-4d7e1db388ce",
       "name": "Select rows from Users",
       "credentials": {
         "postgres": {
-          "id": "s2aFD2Q2HlKyOBnG",
+          "id": "sDAx3C8YiPv8uVPi",
           "name": "Postgres account"
         }
       }
     },
     {
       "parameters": {
-        "url": "=https://staging.fusepong.com/api/app/company/group_device_names_by_location?company_name={{ $json.company }}",
+        "url": "=https://solutions.fusepong.com/api/app/company/group_device_names_by_location?company_name={{ $json.company }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1260,
-        700
+        1320,
+        580
       ],
-      "id": "0ec773d0-aab1-4632-9257-f483fb365a7e",
+      "id": "a5bcd288-33ee-4360-bae0-2e459a300561",
       "name": "Get comapny information",
       "onError": "continueRegularOutput"
     },
@@ -1875,14 +1875,14 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        1040,
-        980
+        1100,
+        860
       ],
-      "id": "45dd87eb-b2e2-468a-9738-d0e3449518c4",
+      "id": "c5e31614-cdd2-432b-b8dd-cf60ddda8d9b",
       "name": "Get company info",
       "credentials": {
         "redis": {
-          "id": "MhXd4XzcR7PcrUrJ",
+          "id": "xehRnTWPh4hf1OXU",
           "name": "Redis account"
         }
       }
@@ -1894,10 +1894,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1260,
-        980
+        1320,
+        860
       ],
-      "id": "cf87145c-a159-40a4-b331-3f8826b032a5",
+      "id": "683006dc-f5fd-44ad-8534-08c618b35f19",
       "name": "Set message"
     },
     {
@@ -1935,10 +1935,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2260,
-        820
+        2320,
+        700
       ],
-      "id": "3aef10db-07ee-49ca-babf-8aab5922e737",
+      "id": "fee1ce02-d3d7-46c9-aee1-2aff1949aaea",
       "name": "Send Flow message"
     },
     {
@@ -1969,10 +1969,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1320,
-        460
+        1380,
+        340
       ],
-      "id": "f998e512-da73-4e81-93b6-a62a4dc88b93",
+      "id": "15ddf6b3-a4c6-4b23-bec4-667bc6726f1c",
       "name": "If1"
     },
     {
@@ -2003,10 +2003,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1440,
-        840
+        1500,
+        720
       ],
-      "id": "006b91d3-ef8d-4c31-899c-5af974425e14",
+      "id": "afc8de3d-d4d8-43c5-804d-e26d01721dc7",
       "name": "If Http error"
     },
     {
@@ -2018,10 +2018,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1640,
-        920
+        1700,
+        800
       ],
-      "id": "28b2e2b5-df6c-418a-b96a-81b69dc40e91",
+      "id": "5f84ecfd-f775-40e2-a621-ff9852f63228",
       "name": "Edit Fields"
     }
   ],
@@ -2436,11 +2436,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "8e099d76-b3dd-4ad9-b89e-7c91e92107ae",
+  "versionId": "9b74e521-2cd1-4cfe-8641-877599a6af13",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "bef5690b260242b347db82029ddc76e57c73720b0de85793f631cb9ea74a5969"
+    "instanceId": "ef825fd0aadd524f296fcc47e839063fc188467b749aede198ac933e01f6d615"
   },
-  "id": "eBSwfezUgh9b8NpK",
+  "id": "u9Ow0C8VgGlWk696",
   "tags": []
 }
