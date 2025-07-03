@@ -33,11 +33,13 @@ CREATE TABLE categories (
 -- ================================================
 -- TABLA: subcategories (problemas del chatbot)
 -- ================================================
+-- tabla subcategories con auto-relación
 CREATE TABLE subcategories (
     id SERIAL PRIMARY KEY,
     category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     solution TEXT,
+    related_subcategory_id INTEGER REFERENCES subcategories(id) ON DELETE SET NULL,
     UNIQUE (category_id, name)
 );
 
@@ -54,11 +56,11 @@ CREATE TABLE chats (
     device TEXT,          -- dispositivo asociado
     summary TEXT,         -- resumen del problema
     status TEXT DEFAULT 'open',
+    solution_gived BOOLEAN DEFAULT FAlSE, -- si se ha dado una solución
     solution_feedback BOOLEAN DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     closed_at TIMESTAMP
 );
-
 -- ================================================
 -- ÍNDICES SUGERIDOS
 -- ================================================
@@ -82,49 +84,32 @@ VALUES
 -- subcategorías (problemas) para ingreso_peatonal
 INSERT INTO subcategories (category_id, name, solution)
 VALUES
-  (1, 'No me identifica', 'Revisar que el documento esté vigente y visible.'),
-  (1, 'No prende el dispositivo', 'Verificar conexión eléctrica y reiniciar el equipo.'),
-  (1, 'Me dice que expiró', 'Solicitar actualización de permisos con el administrador.'),
-  (1, 'Otro', 'Contactar soporte.');
+  (1, 'puerta no me abre', null),                                                                                                                         --1
+    (1, 'lector apagado', 'Toca el lector para activarlo\nAcerca nuevamente tu rostro para el reconocimiento'),                                           --2
+    (1, 'no me identifica', 'Verifica que estés a la distancia adecuada\nAsegúrate de que no haya otras personas alrededor'),                             --3
+    (1, 'me identifica pero no abre', 'Confirma que la exclusa esté cerrada\nHala suavemente la puerta y vuelve a poner tu rostro frente al lector'),     --4
+  (1, 'puerta no cierra', null),                                                                                                                          --5
+    (1, 'puerta abierta totalmente', null),                                                                                                               --6
+    (1, 'electroimán no asegura', null),                                                                                                                  --7
+    (1, 'sirena está sonando', 'Asegúrate de que la puerta esté completamente cerrada');                                                                  --8
 
--- subcategorías para ingreso_vehicular
+-- actualizamos los hijos para asociarlos con su padre
+UPDATE subcategories SET related_subcategory_id = 1 WHERE id IN (2,3,4);
+UPDATE subcategories SET related_subcategory_id = 5 WHERE id IN (6,7);
+-- la sirena (id 8) queda sola
+
 INSERT INTO subcategories (category_id, name, solution)
 VALUES
-  (2, 'No abre la barrera', 'Verificar permisos del vehículo y el lector.'),
-  (2, 'No detecta el TAG', 'Revisar la ubicación correcta del TAG en el parabrisas.'),
-  (2, 'Otro', 'Contactar soporte técnico.');
+  (2, 'No puedo entrar', NULL),                                                                                                                           -- id 9
+    (2, 'lector apagado', 'Toca el lector para activarlo\nAcerca nuevamente tu rostro para el reconocimiento'),                                           -- id 10
+    (2, 'no me identifica', 'Verifica que estés a la distancia adecuada\nAsegúrate de que no haya otras personas alrededor'),                             -- id 11
+    (2, 'me identifica pero no abre', 'Si no te abre puedes ingresar desde la app\nRetrocede el vehículo y vuelve a intentarlo'),                         -- id 12
+    (2, 'Sistema LPR', 'Retrocede el vehículo y vuelve a intentarlo'),                                                                                    -- id 13
+  (2, 'No puedo salir', NULL),                                                                                                                            -- id 14
+    (2, 'Problemas con doble validación', 'Da reversa y al volver a salir asegúrate de que las dos luces del indicador estén en verde');                  -- id 15
 
--- subcategorías para aplicacion
-INSERT INTO subcategories (category_id, name, solution)
-VALUES
-  (3, 'No abre la aplicación', 'Reinstalar la aplicación y probar de nuevo.'),
-  (3, 'No llegan notificaciones', 'Verificar permisos de notificaciones en el teléfono.'),
-  (3, 'Otro', 'Contactar soporte técnico.');
+   
 
--- subcategorías para cctv
-INSERT INTO subcategories (category_id, name, solution)
-VALUES
-  (4, 'Cámara sin imagen', 'Verificar alimentación eléctrica y cables.'),
-  (4, 'No graba eventos', 'Revisar configuración de grabación.'),
-  (4, 'Otro', 'Contactar soporte técnico.');
+UPDATE subcategories SET related_subcategory_id = 9 WHERE id IN (10,11,12,13);
+UPDATE subcategories SET related_subcategory_id = 14 WHERE id IN (10,11,12,15);
 
--- subcategorías para otro
-INSERT INTO subcategories (category_id, name, solution)
-VALUES
-  (5, 'Otro problema', 'Contactar soporte técnico.');
-
--- ================================================
--- DEMO DE USUARIOS
--- ================================================
-INSERT INTO users (name, phone, email, company)
-VALUES 
-  ('Alice Smith', '3001234567', 'alice@example.com', 'ACME S.A.S.'),
-  ('Bob Johnson', '3007654321', 'bob@example.com', 'BetaCorp Ltda.');
-
--- ================================================
--- DEMO DE CHATS
--- ================================================
-INSERT INTO chats (user_id, category_id, subcategory_id, description, summary, status)
-VALUES
-  (1, 1, 1, 'Mi carnet no funciona en el torniquete.', 'Se revisó vigencia de documento.', 'open'),
-  (2, 4, 9, 'La cámara del parqueadero no muestra imagen', 'Verificar alimentación eléctrica.', 'open');
