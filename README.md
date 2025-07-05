@@ -133,6 +133,4 @@ docker system prune -a --volumes
 
 
 
-✅ **Copia tal cual** este bloque, pégalo en tu `README.md` del repositorio, ¡y listo!
-Si quieres después agregar badges, documentación de endpoints o diagramas de arquitectura, avísame y te ayudo a generarlos también.
 
